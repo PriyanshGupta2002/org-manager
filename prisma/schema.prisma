@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String         @unique
+  email         String         @unique
+  name          String
+  imageUrl      String
+  organizations Organization[]
+  members       Member[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Organization {
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  ownerId             String?   @db.ObjectId
+  owner               User?     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  inviteCode          String
+  name                String
+  members             Member[]
+  projects            Project[]
+  organizationEmail   String
+  organizationWebsite String
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model Member {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  role           String       @default("user")
+  profileId      String       @db.ObjectId
+  profile        User         @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  organizationId String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  projectIds     String[]     @db.ObjectId
+  projects       Project[]    @relation(fields: [projectIds], references: [id])
+}
+
+model Project {
+  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
+  projectName        String
+  projectDescription String
+  status             Status       @default(DEVELOPMENT)
+  Organization       Organization @relation(fields: [organizationId], references: [id])
+  organizationId     String       @db.ObjectId
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  memberIds          String[]     @db.ObjectId
+  members            Member[]     @relation(fields: [memberIds], references: [id])
+}
+
+enum Status {
+  COMPLETED
+  DEVELOPMENT
+}

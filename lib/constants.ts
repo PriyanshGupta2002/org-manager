@@ -8,7 +8,7 @@ export const sidebarLinks = [
       },
       {
         name: "Your Organizations",
-        link: "/organizations",
+        link: "/view-organizations",
       },
     ],
   },

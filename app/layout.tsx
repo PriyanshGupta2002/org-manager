@@ -4,7 +4,10 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Sidebar from "@/components/sidebar/sidebar-navigation";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { getCurrentProfile } from "@/lib/create-profile";
+import { cn } from "@/lib/utils";
+import ModalProvider from "@/providers/modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,12 +32,18 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <ModalProvider />
             {currentProfile && (
-              <div className="hidden lg:block fixed bg-zinc-300/25 w-[250px] min-h-screen p-4 ">
+              <div className="hidden lg:block z-10 fixed bg-zinc-300/25 w-[250px] min-h-screen p-4 ">
                 <Sidebar />
               </div>
             )}
-            <div>{children}</div>
+            <div
+              className={cn("lg:pl-[270px] py-3", !currentProfile && "lg:pl-0")}
+            >
+              {children}
+            </div>
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>

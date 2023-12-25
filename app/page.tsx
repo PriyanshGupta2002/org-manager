@@ -1,14 +1,13 @@
 import { getCurrentProfile } from "@/lib/create-profile";
-import { UserButton, redirectToSignIn } from "@clerk/nextjs";
-import React from "react";
+import { redirectToSignIn } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 const Home = async () => {
   const currentProfile = await getCurrentProfile();
   if (!currentProfile) {
     return redirectToSignIn();
   }
-
-  return <div></div>;
+  return redirect("/create-organization");
 };
 
 export default Home;

@@ -5,9 +5,17 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import useModal from "@/hooks/use-modal";
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be atleast 2 characters long",
+  }),
+});
 
 const CreateProjectModal = () => {
   const { isOpen, onClose, type } = useModal();
@@ -23,7 +31,7 @@ const CreateProjectModal = () => {
             Create Project for the organization
           </DialogDescription>
         </DialogHeader>
-        <div className="p-4">form goes here</div>
+        <div className="p-4"></div>
       </DialogContent>
     </Dialog>
   );
